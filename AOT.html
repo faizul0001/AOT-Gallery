@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Survey Corps Archive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Staatliches&family=Cinzel:wght@500;700&family=Noto+Sans+Bengali:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#e9e0c9;
+    --bg:#17150f;
+    --bg-2:#211d15;
+    --corps-green:#4a5240;
+    --corps-green-dim:#333a2c;
+    --rust:#9c4131;
+    --gold:#b9924f;
+    --line:#3d3826;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;height:100%;}
+  body{
+    background:
+      radial-gradient(ellipse at 20% 0%, #232014 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 100%, #1c2118 0%, transparent 55%),
+      var(--bg);
+    color:var(--ink);
+    font-family:'Inter', 'Noto Sans Bengali', sans-serif;
+    min-height:100vh;
+    display:flex; flex-direction:column;
+  }
+  [lang-bn]{ font-family:'Noto Sans Bengali','Inter',sans-serif; }
+
+  .grain{
+    position:fixed; inset:0; pointer-events:none; z-index:1; opacity:.05;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .lang-toggle{
+    position:fixed; top:20px; right:20px; z-index:10;
+    display:flex; background:var(--bg-2);
+    border:1px solid var(--line); border-radius:3px;
+    overflow:hidden;
+  }
+  .lang-toggle button{
+    font-family:'Staatliches', sans-serif;
+    letter-spacing:.1em;
+    background:none; border:none; color:#8f8464;
+    padding:9px 16px; cursor:pointer; font-size:13px;
+  }
+  .lang-toggle button.active{ background:var(--corps-green-dim); color:var(--ink); }
+
+  .hero{
+    position:relative; z-index:2;
+    flex:1;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    text-align:center;
+    padding:80px 24px 60px;
+  }
+
+  .wings{ width:96px; height:96px; margin:0 auto 24px; opacity:.9; }
+
+  .eyebrow{
+    font-family:'Staatliches', sans-serif;
+    letter-spacing:.35em; font-size:12px;
+    color:var(--gold); text-transform:uppercase;
+    margin-bottom:14px;
+  }
+
+  h1{
+    font-family:'Cinzel', serif; font-weight:700;
+    font-size:clamp(36px,7vw,68px);
+    margin:0 0 18px; letter-spacing:.03em; line-height:1.1;
+  }
+  h1[lang-bn]{ font-family:'Noto Sans Bengali',serif; letter-spacing:0; }
+
+  .sub{
+    color:#a89c78; font-size:16px; max-width:520px;
+    margin:0 auto 40px; line-height:1.7;
+  }
+
+  .cta{
+    font-family:'Staatliches', sans-serif;
+    letter-spacing:.15em; font-size:16px;
+    text-transform:uppercase; text-decoration:none;
+    color:var(--bg); background:var(--gold);
+    padding:16px 40px; border-radius:2px;
+    transition:transform .2s ease, box-shadow .2s ease;
+    display:inline-block;
+  }
+  .cta:hover{ transform:translateY(-2px); box-shadow:0 8px 24px rgba(185,146,79,.25); }
+
+  .stats-strip{
+    position:relative; z-index:2;
+    display:flex; justify-content:center; gap:48px;
+    flex-wrap:wrap;
+    padding:34px 24px;
+    border-top:1px solid var(--line);
+  }
+  .stat{ text-align:center; }
+  .stat .n{
+    font-family:'Cinzel', serif; font-size:26px; color:var(--gold);
+    display:block;
+  }
+  .stat .l{
+    font-family:'Staatliches', sans-serif;
+    letter-spacing:.15em; font-size:11px;
+    color:#8f8464; text-transform:uppercase; margin-top:4px;
+  }
+
+  footer{
+    position:relative; z-index:2;
+    text-align:center; padding:24px 20px;
+    font-size:12px; color:#665f45;
+    border-top:1px solid var(--line);
+  }
+
+  .roster-label{
+    font-family:'Staatliches', sans-serif;
+    letter-spacing:.25em; font-size:13px; color:var(--gold);
+    text-transform:uppercase;
+    display:flex; align-items:center; gap:14px;
+    margin-bottom:24px;
+  }
+  .roster-label::after{ content:""; flex:1; height:1px; background:var(--line); }
+
+  main{
+    position:relative; z-index:2;
+    max-width:1040px; margin:0 auto; padding:56px 24px 20px;
+    width:100%;
+  }
+
+  .thumb-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
+    gap:16px;
+  }
+  .thumb{
+    display:flex; flex-direction:column; align-items:center;
+    text-align:center; text-decoration:none; color:var(--ink);
+    background:var(--bg-2); border:1px solid var(--line);
+    border-radius:2px; padding:18px 10px;
+    transition:border-color .2s ease, transform .2s ease;
+  }
+  .thumb:hover{ border-color:var(--gold); transform:translateY(-3px); }
+  .thumb .avatar{
+    width:52px; height:52px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    margin-bottom:10px;
+  }
+  .thumb .avatar svg{ width:24px; height:24px; }
+  .thumb .name{
+    font-family:'Cinzel', serif; font-size:13.5px; line-height:1.3;
+  }
+  .thumb .name[lang-bn]{ font-family:'Noto Sans Bengali',serif; }
+</style>
+</head>
+<body>
+<div class="grain"></div>
+
+<div class="lang-toggle">
+  <button id="btn-en" class="active" onclick="setLang('en')">EN</button>
+  <button id="btn-bn" onclick="setLang('bn')">বাং</button>
+</div>
+
+<section class="hero">
+  <svg class="wings" viewBox="0 0 100 100" fill="none">
+    <path d="M50 20 C35 30 15 35 5 55 C20 50 35 48 48 55 L48 85 L52 85 L52 55 C65 48 80 50 95 55 C85 35 65 30 50 20Z"
+      stroke="#b9924f" stroke-width="1.5" fill="none"/>
+    <circle cx="50" cy="30" r="5" stroke="#9c4131" stroke-width="1.5" fill="none"/>
+  </svg>
+
+  <div class="eyebrow" data-en="Beyond the Walls" data-bn="দেয়ালের ওপারে">Beyond the Walls</div>
+  <h1 data-en="Survey Corps Archive" data-bn="জরিপ বাহিনী আর্কাইভ">Survey Corps Archive</h1>
+  <p class="sub" data-en="A personal reference archive of Attack on Titan — soldiers, ranks, and the world beyond the Walls. Built while learning to code."
+     data-bn="অ্যাটাক অন টাইটানের একটি ব্যক্তিগত তথ্য আর্কাইভ — সৈনিক, পদমর্যাদা, আর দেয়ালের ওপারের জগৎ। কোডিং শিখতে শিখতে তৈরি।">
+     A personal reference archive of Attack on Titan.
+  </p>
+</section>
+
+<main>
+  <div class="roster-label" data-en="Tap a Face to Open Their File" data-bn="বিস্তারিত দেখতে একজনের ছবিতে ট্যাপ করো">Tap a Face to Open Their File</div>
+  <div class="thumb-grid" id="thumb-grid"></div>
+</main>
+
+<div class="stats-strip">
+  <div class="stat"><span class="n">15</span><span class="l" data-en="Personnel Filed" data-bn="সদস্য নথিভুক্ত">Personnel Filed</span></div>
+  <div class="stat"><span class="n">2</span><span class="l" data-en="Languages" data-bn="ভাষা">Languages</span></div>
+  <div class="stat"><span class="n">3</span><span class="l" data-en="Walls Recorded" data-bn="নথিভুক্ত দেয়াল">Walls Recorded</span></div>
+</div>
+
+<footer data-en="Archive maintained by Faizul · Mirpur, Dhaka" data-bn="আর্কাইভ রক্ষণাবেক্ষণ করেন ফয়জুল · মিরপুর, ঢাকা">
+  Archive maintained by Faizul · Mirpur, Dhaka
+</footer>
+
+<script>
+const characters = [
+  { name_en:"Eren Yeager", name_bn:"ইয়েরেন ইয়েগার", color:"#b9924f" },
+  { name_en:"Mikasa Ackerman", name_bn:"মিকাসা আকারমান", color:"#9c4131" },
+  { name_en:"Armin Arlert", name_bn:"আরমিন আরলার্ট", color:"#6b7a56" },
+  { name_en:"Levi Ackerman", name_bn:"লেভাই আকারমান", color:"#c9a86a" },
+  { name_en:"Erwin Smith", name_bn:"আরউইন স্মিথ", color:"#8a4a3a" },
+  { name_en:"Sasha Blouse", name_bn:"সাশা ব্লুজ", color:"#556b4a" },
+  { name_en:"Hange Zoë", name_bn:"হাঞ্জে জো", color:"#b9924f" },
+  { name_en:"Jean Kirstein", name_bn:"জঁ কার্স্টাইন", color:"#9c4131" },
+  { name_en:"Connie Springer", name_bn:"কনি স্প্রিংগার", color:"#6b7a56" },
+  { name_en:"Historia Reiss", name_bn:"হিস্টোরিয়া রাইস", color:"#c9a86a" },
+  { name_en:"Reiner Braun", name_bn:"রাইনার ব্রাউন", color:"#8a4a3a" },
+  { name_en:"Annie Leonhart", name_bn:"অ্যানি লিওনহার্ট", color:"#556b4a" },
+  { name_en:"Ymir", name_bn:"ইমির", color:"#b9924f" },
+  { name_en:"Zeke Yeager", name_bn:"জিক ইয়েগার", color:"#9c4131" },
+  { name_en:"Pieck Finger", name_bn:"পিক ফিঙ্গার", color:"#6b7a56" }
+];
+
+const ICONS = {
+  "eren-yeager": `<circle cx="9" cy="12" r="4"/><path d="M13 12h7m-2-2.5v2.5m3-2.5v2.5"/>`,
+  "mikasa-ackerman": `<path d="M6 7c0 5 2 7 6 7s6-2 6-7"/><path d="M8 14l-2 6M16 14l2 6"/>`,
+  "armin-arlert": `<path d="M4 6c4-2 6-2 8 0v12c-2-2-4-2-8 0V6z"/><path d="M20 6c-4-2-6-2-8 0v12c2-2 4-2 8 0V6z"/>`,
+  "levi-ackerman": `<path d="M4 20L20 4M4 4l16 16"/>`,
+  "erwin-smith": `<circle cx="12" cy="12" r="8"/><path d="M12 8l2 6-2-2-2 2 2-6z"/>`,
+  "sasha-blouse": `<path d="M7 4c6 3 6 15 0 18"/><path d="M7 13h13M17 10l3 3-3 3"/>`,
+  "hange-zoe": `<circle cx="10" cy="10" r="6"/><path d="M15 15l6 6"/>`,
+  "jean-kirstein": `<path d="M6 20c0-7 2-11 6-11s6 4 6 11"/><path d="M6 20v-3M18 20v-3"/>`,
+  "connie-springer": `<path d="M3 19l6-10 4 6 3-4 5 8H3z"/>`,
+  "historia-reiss": `<path d="M4 18h16l-2-9-4 4-2-6-2 6-4-4-2 9z"/>`,
+  "reiner-braun": `<path d="M12 3l7 3v6c0 5-3 8-7 9-4-1-7-4-7-9V6l7-3z"/>`,
+  "annie-leonhart": `<rect x="6" y="10" width="12" height="9" rx="3"/><path d="M9 10V7a3 3 0 016 0v3"/>`,
+  "ymir": `<circle cx="8" cy="12" r="4"/><circle cx="16" cy="12" r="4"/>`,
+  "zeke-yeager": `<path d="M4 20L18 6"/><path d="M15 6h3v3"/>`,
+  "pieck-finger": `<circle cx="8" cy="14" r="3.5"/><circle cx="16" cy="14" r="3.5"/><path d="M11.5 13.5h1M9.5 10.5l2-4h1l2 4"/>`
+};
+
+function slugify(name){
+  return name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+}
+function initials(name){
+  return name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+}
+
+const thumbGrid = document.getElementById('thumb-grid');
+characters.forEach(c => {
+  const slug = slugify(c.name_en);
+  const a = document.createElement('a');
+  a.className = 'thumb';
+  a.href = `characters.html#char-${slug}`;
+  a.innerHTML = `
+    <div class="avatar" style="background:${c.color}"><svg viewBox="0 0 24 24" fill="none" stroke="#17150f" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${ICONS[slug] || ''}</svg></div>
+    <div class="name" data-en="${c.name_en}" data-bn="${c.name_bn}">${c.name_en}</div>
+  `;
+  thumbGrid.appendChild(a);
+});
+
+function setLang(lang){
+  document.querySelectorAll('[data-en]').forEach(el=>{
+    el.textContent = lang === 'bn' ? el.dataset.bn : el.dataset.en;
+    el.toggleAttribute('lang-bn', lang === 'bn');
+  });
+  document.getElementById('btn-en').classList.toggle('active', lang==='en');
+  document.getElementById('btn-bn').classList.toggle('active', lang==='bn');
+  document.documentElement.lang = lang;
+}
+</script>
+</body>
+</html>
